@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "compile": "npx tsc --build ./tsconfig.json",
-    "unittest": "mocha --timeout 10000 ./build/tests/**/*.js",
-    "coverage": "npm run compile && npx c8 -- npm run unittest"
+    "unittest": "mocha --timeout 10000 ./build/tests/*.js",
+    "coverage": "npx c8 -- npm run unittest"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",

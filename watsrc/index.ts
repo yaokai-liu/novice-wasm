@@ -1,16 +1,13 @@
-
-import { Func } from "mocha";
-import exp from "node:constants";
 import fs from "node:fs";
-
-class WasmModule {
-    
-}
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const NoviceWasm: Record<string, Function> = {};
 
-function loadAbs(): void {
-    const wasmBuffer = fs.readFileSync("../build/watsrc/abs.wasm");
+const DIR: string = dirname(fileURLToPath(import.meta.url));
+
+function loadWasmModule(): void {
+    const wasmBuffer = fs.readFileSync(DIR + "/novice.wasm");
     WebAssembly.instantiate(wasmBuffer).then(wasmModule => {
         return new WebAssembly.Instance(wasmModule.module);
     }).then(instance => {
@@ -19,4 +16,4 @@ function loadAbs(): void {
     });
 
 }
-loadAbs();
+loadWasmModule();
