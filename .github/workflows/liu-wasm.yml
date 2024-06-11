@@ -26,13 +26,13 @@ jobs:
           sudo apt-get update --upgrade
           sudo apt-get install -y npm wabt
           wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-          nvm install 18.0.0
     
       - name: Fetch Repository
         uses: actions/checkout@v4
-      
+
       - name: Compile and Test
         run: |
+          nvm install 18.0.0
           nvm use 18.0.0 && npm install
           npm run compile
           wat2wasm watsrc/*.wat -o watsrc/novice.wasm
