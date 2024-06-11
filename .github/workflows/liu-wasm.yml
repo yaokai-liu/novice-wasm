@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 18.x
 
-      - run: npm ci
+      - run: npm i
       # - name: Fetch Repository
       #   uses: actions/checkout@v4
 
