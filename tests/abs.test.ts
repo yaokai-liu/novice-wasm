@@ -3,7 +3,6 @@ import { NoviceWasm } from "../watsrc/index.js";
 import assert from "node:assert";
 import { test, suite } from "mocha";
 
-
 suite("testAbs", () => {
     test("testAbs32Positive", () => {
         assert.strictEqual(NoviceTs.abs32(32), 32);
