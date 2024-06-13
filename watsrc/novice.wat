@@ -1,5 +1,7 @@
 (module
     (import "js" "mem" (memory 1))
+    (import "js" "tab" (table 1 funcref))
+    (type $t_cmp_fn (func (param $_ele1 i32) (param $_ele2 i32) (result i32)))
     (func $splat64 (param $a i64) (result i64)  (local $_debug i64)
         (i64.shr_u  (i64.shl (local.get  $a) (i64.const  56)) (i64.const  56))
         (i64.or (i64.shl (local.tee $a) (i64.const 8 )) (local.get $a))
@@ -147,8 +149,99 @@
         local.get $_sum
         return
     )
+    (func $swap (param $a i32) (param $b i32) (param $_ele_size i32)
+        (local $_i i32)
+        i32.const 0
+        local.set $_i
+        (loop $_loop
+            local.get $b
+            local.get $a
+            local.get $_i
+            i32.add
+            local.tee $a
+            i32.load8_u
+            local.get $a
+            local.get $b
+            local.get $_i
+            i32.add
+            local.tee $b
+            i32.load8_u
+            i32.store8
+            i32.store8
+            local.get $_i
+            i32.const 1
+            i32.add
+            local.tee $_i
+            local.get $_ele_size
+            i32.ge_u
+            br_if $_loop
+        )
+        return
+    )
+    (func $quickSort (param $_elements i32) (param $_count i32) (param $_ele_size i32) (param $_fn_cmp i32)
+        (local $lower_bound i32) (local $upper_bound i32) (local $left i32) (local $right i32)
+        (i32.mul (local.get $_count) (local.get $_ele_size))
+        (if (i32.eqz (local.tee $right)) (then return))
+        (local.get $_elements)
+        (local.tee $left)
+        (local.tee $lower_bound)
+        (local.get $right)
+        (i32.add)
+        (local.tee $right)
+        (local.set $upper_bound)
+        (block $_block_out
+            (loop $_out_loop
+                (block $_block1
+                    (loop $_loop1
+                        (i32.ge_u (local.get $left) (local.get $right))
+                        br_if  $_block_out
+                        (local.get $left) (local.get $right) (local.get $_fn_cmp)
+                        (i32.le_s (call_indirect (type $t_cmp_fn)) (i32.const 0))
+                        (local.set $left (i32.add (local.get $left) (local.get $_ele_size)))
+                        br_if $_loop1
+                    )
+                    (i32.ge_u (local.get $left) (local.get $right))
+                    br_if  $_block_out
+                    (local.get $left) (local.get $right) (local.get $_ele_size)
+                    call $swap
+                    (local.set $right (i32.sub (local.get $right) (local.get $_ele_size)))
+                )
+                (block $_block2
+                    (loop $_loop2
+                        (i32.ge_u (local.get $left) (local.get $right))
+                        br_if  $_block_out
+                        (local.get $left) (local.get $right) (local.get $_fn_cmp)
+                        (i32.le_s (call_indirect (type $t_cmp_fn)) (i32.const 0))
+                        (local.set $right (i32.sub (local.get $right) (local.get $_ele_size)))
+                        br_if $_loop2
+                    )
+                    (i32.ge_u (local.get $left) (local.get $right))
+                    br_if  $_block2
+                    (local.get $left) (local.get $right) (local.get $_ele_size)
+                    call $swap
+                    (local.set $left (i32.add (local.get $left) (local.get $_ele_size)))
+                )
+                br $_out_loop
+            )
+        )
+        (local.get $lower_bound)
+        (i32.div_u (i32.sub (local.get $left) (local.get $lower_bound)) (local.get $_ele_size))
+        (local.get $_ele_size)
+        (local.get $_fn_cmp)
+        call $quickSort
+
+        (i32.add (local.get $right) (local.get $_ele_size))
+        (i32.div_u (i32.sub (local.tee $right) (local.get $upper_bound)) (local.get $_ele_size))
+        (local.set $_count)
+        (local.get $right)
+        (local.get $_count)
+        (local.get $_ele_size)
+        (local.get $_fn_cmp)
+        call $quickSort
+    )
     (export "abs32" (func $abs32))
     (export "abs64" (func $abs64))
     (export "memset" (func $memset))
     (export "getSum" (func $getSum))
+    (export "quickSort" (func $quickSort))
 )
