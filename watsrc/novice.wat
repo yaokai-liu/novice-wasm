@@ -28,16 +28,16 @@
         i64.extend_i32_u
         call  $splat64
         local.set $_ch64
-        (block
+        (block $_block1
             local.get $_size
             i32.const 8
             call $subrem
             local.set $_size
             local.tee $_cnt
             i32.eqz
-            br_if   0
+            br_if   $_block1
             (local.set $_i (i32.const 0))
-            (loop
+            (loop $_loop1
                 local.get $_i
                 local.get $_sp
                 i32.add
@@ -49,23 +49,23 @@
                 local.tee $_i
                 local.get $_cnt
                 i32.lt_u
-                br_if   0
+                br_if   $_loop1
             )
             local.get $_cnt
             local.get $_sp
             i32.add
             local.set $_sp
         )
-        (block
+        (block $_block2
             local.get $_size
             i32.const 4
             call $subrem
             local.set $_size
             local.tee $_cnt
             i32.eqz
-            br_if   0
+            br_if   $_block2
             (local.set $_i (i32.const 0))
-            (loop
+            (loop $_loop2
                 local.get $_i
                 local.get $_sp
                 i32.add
@@ -77,19 +77,19 @@
                 local.tee $_i
                 local.get $_cnt
                 i32.lt_u
-                br_if   0
+                br_if   $_loop2
             )
             local.get $_cnt
             local.get $_sp
             i32.add
             local.set $_sp
         )
-        (block
+        (block $_block3
             local.get $_size
             i32.eqz
-            br_if   0
+            br_if   $_block3
             (local.set $_i (i32.const 0))
-            (loop
+            (loop $_loop3
                 local.get $_i
                 local.get $_sp
                 i32.add
@@ -101,7 +101,7 @@
                 local.tee $_i
                 local.get $_size
                 i32.lt_u
-                br_if   0
+                br_if   $_loop3
             )
         )
         return
