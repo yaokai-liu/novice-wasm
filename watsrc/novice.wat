@@ -118,7 +118,35 @@
         i64.trunc_f64_s
         return
     )
+    (func $getSum (param $_nums i32) (param $_count i32) (result i32)
+        (local $_sum i32) (local $_cnt i32) (local $_i i32)
+        local.get $_count
+        i32.const 4
+        i32.mul
+        local.set $_cnt
+        i32.const 0
+        local.set $_i
+        (loop 
+            local.get $_i
+            local.get $_nums
+            i32.add
+            i32.load
+            local.get $_sum
+            i32.add
+            local.set $_sum
+            local.get $_i
+            i32.const 4
+            i32.add
+            local.tee $_i
+            local.get $_cnt
+            i32.lt_u
+            br_if 0
+        )
+        local.get $_sum
+        return
+    )
     (export "abs32" (func $abs32))
     (export "abs64" (func $abs64))
     (export "memset" (func $memset))
+    (export "getSum" (func $getSum))
 )
