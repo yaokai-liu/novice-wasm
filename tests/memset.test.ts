@@ -17,12 +17,12 @@ suite("testMemset", () => {
         NoviceWasm.memset(origin_mem, value, 100);
         check(origin_mem, 199, 100);
     });
-    test("testMemsetCutOverFlowValue", () => {
+    test("testMemsetNormalValue2", () => {
         const value: number = 234;
         const origin_mem: number = 0;
         NoviceWasm.memset(origin_mem, value, 100);
         assert.strictEqual(origin_mem, origin_mem);
-        check(origin_mem, 199, 100);
+        check(origin_mem, 234, 100);
     });
     test("testMemsetNegativeToComplementValue", () => {
         const value: number = -1;
