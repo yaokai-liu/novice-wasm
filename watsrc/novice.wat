@@ -15,11 +15,14 @@
         local.get $b
         return
     )
-    (func $memset (param $_mem i32) (param $_ch i32) (param $_size i32) (result i32)
+    (func $memset (param $_mem i32) (param $_ch i32) (param $_size i32)
         (local $_sp i32) (local $_i i32) (local $_cnt i32) (local $_ch64 i64)
         (local.set $_sp (local.get $_mem))
         (if (i32.eqz (local.get $_size))
-           (then (local.get $_mem) return)
+           (then return)
+        )
+        (if (i32.ge_u (local.get $_size) (i32.const 0x10000))
+           (then return)
         )
         local.get $_ch
         i64.extend_i32_u
@@ -101,7 +104,6 @@
                 br_if   0
             )
         )
-        local.get $_mem
         return
     )
     (func $abs32 (param $_num i32) (result i32)

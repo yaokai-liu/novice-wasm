@@ -19,7 +19,7 @@ function loadWasmModule(): void {
     }).then(instance => {
         NoviceWasm.abs32 = instance.exports.abs32 as any as (_num:number)=>number;
         NoviceWasm.abs64 = instance.exports.abs64 as any as (_num:bigint)=>bigint;
-        NoviceWasm.memset = instance.exports.memset as any as (_mem:number, _ch:number, _size:number) => number;
+        NoviceWasm.memset = instance.exports.memset as any as (_mem:number, _ch:number, _size:number) => void;
         NoviceWasm.getSum = instance.exports.getSum as any as (_nums:number, _count:number) => number;
     });
 }

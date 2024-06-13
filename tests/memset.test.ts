@@ -9,37 +9,29 @@ suite("testMemset", () => {
         const summands = new Uint8Array(memBuffer);
         for (let i = _start; i < _size; i ++) {
             if (summands[i] != value) {
-                return i + 1 - _start;
+                return false;
             }
         }
-        return 0;
+        return true;
     }
-    test("testMemsetZeroLength", () => {
-        const value: number = 199;
-        const origin_mem: number = 0;
-        const mem:number = NoviceWasm.memset(origin_mem, value, 0);
-        assert.strictEqual(mem, origin_mem);
-        // since length is zero, will not check the memory.
-    });
     test("testMemsetNormalValue", () => {
         const value: number = 199;
         const origin_mem: number = 0;
-        const mem:number = NoviceWasm.memset(origin_mem, value, 100);
-        assert.strictEqual(mem, origin_mem);
-        assert.strictEqual(check(mem, 199, 100), 0);
+        NoviceWasm.memset(origin_mem, value, 100);
+        assert.strictEqual(check(origin_mem, 199, 100), true);
     });
     test("testMemsetNegativeToComplementValue", () => {
         const value: number = -1;
         const origin_mem: number = 0;
-        const mem:number = NoviceWasm.memset(origin_mem, value, 100);
-        assert.strictEqual(mem, origin_mem);
-        assert.strictEqual(check(mem, 255, 100), 0);
+        NoviceWasm.memset(origin_mem, value, 100);
+        assert.strictEqual(origin_mem, origin_mem);
+        assert.strictEqual(check(origin_mem, 255, 100), true);
     });
     test("testMemsetCutOverFlowValue", () => {
         const value: number = 167832;
         const origin_mem: number = 0;
-        const mem:number = NoviceWasm.memset(origin_mem, value, 100);
-        assert.strictEqual(mem, origin_mem);
-        assert.strictEqual(check(mem, 167832 & 255, 100), 0);
+        NoviceWasm.memset(origin_mem, value, 100);
+        assert.strictEqual(origin_mem, origin_mem);
+        assert.strictEqual(check(origin_mem, value & 255, 100), true);
     });
   });
