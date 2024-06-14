@@ -1,0 +1,44 @@
+
+name: CI
+
+on:
+  push:
+    paths:
+      - 'watsrc/*'
+      - 'tssrc/*'
+      - 'tests/*'
+      - 'tsconfig.json'
+      - '.github/workflows/*'
+  pull_request:
+    paths:
+      - 'watsrc/*'
+      - 'tssrc/*'
+      - 'tests/*'
+      - 'tsconfig.json'
+      - '.github/workflows/*'
+
+jobs:
+  test-wasm:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Setup Test Environment
+        run: |
+          sudo apt-get update --upgrade
+          sudo apt-get install -y wabt
+      
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Fetch Repository
+        uses: actions/checkout@v4
+
+      - run: npm i
+
+      - name: Compile and Test
+        run: |
+          npm run compile
+          wat2wasm watsrc/novice.wat -o build/watsrc/novice.wasm
+          npm run coverage
+
