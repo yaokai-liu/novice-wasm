@@ -1,4 +1,3 @@
-import { NoviceTs } from "../tssrc/index.js"
 import { NoviceWasm, NoviceMemory } from "../watsrc/index.js";
 import assert from "node:assert";
 import { test, suite } from "mocha";
@@ -7,8 +6,8 @@ suite("testMemset", () => {
     const memBuffer = NoviceMemory.buffer;
     const check = (_start: number, value:number, _size:number) => {
         const summands = new Uint8Array(memBuffer);
-        for (let i = _start; i < _size; i ++) {
-            assert.strictEqual(summands[i], value);
+        for (let i = 0; i < _size; i ++) {
+            assert.strictEqual(summands[i + _start], value);
         }
     }
     test("testMemsetNormalValue", () => {

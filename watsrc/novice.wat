@@ -147,8 +147,74 @@
         local.get $_sum
         return
     )
+    (func $swap32 (param $a i32) (param $b i32)
+        local.get $b
+        local.get $a
+        i32.load
+        local.get $a
+        local.get $b
+        i32.load
+        i32.store
+        i32.store
+        return
+    )
+    (func $quickSort32 (param $_elements i32) (param $_count i32)
+        (local $lower_bound i32) (local $upper_bound i32) (local $left i32) (local $right i32)
+        (i32.sub (local.get $_count) (i32.const 1))
+        (i32.mul (local.tee $right) (i32.const 4))
+        (if (i32.le_s (local.tee $right) (i32.const 0)) (then return))
+        (local.get $_elements)
+        (local.tee $left)
+        (local.tee $lower_bound)
+        (local.get $right)
+        (i32.add)
+        (local.tee $right)
+        (local.set $upper_bound)
+        (block $_block_out
+            (loop $_out_loop
+                (loop $_loop1
+                    (i32.ge_u (local.get $left) (local.get $right))
+                    br_if  $_block_out
+                    (if (i32.le_s (i32.load (local.get $left)) (i32.load (local.get $right))) 
+                        (then  
+                            (local.set $left (i32.add (local.get $left) (i32.const 4))) 
+                            br $_loop1
+                        )
+                    )
+                )
+                (local.get $left) (local.get $right)
+                call $swap32
+                (local.set $right (i32.sub (local.get $right) (i32.const 4)))
+                
+                (loop $_loop2
+                    (i32.ge_u (local.get $left) (local.get $right))
+                    br_if  $_block_out
+                    (if (i32.le_s (i32.load (local.get $left)) (i32.load (local.get $right))) 
+                        (then  
+                            (local.set $right (i32.sub (local.get $right) (i32.const 4))) 
+                            br $_loop2
+                        )
+                    )
+                )
+                (local.get $left) (local.get $right)
+                call $swap32
+                (local.set $left (i32.add (local.get $left) (i32.const 4)))
+                
+                br $_out_loop
+            )
+        )
+
+        (local.get $lower_bound)
+        (i32.div_u (i32.sub (local.get $left) (local.get $lower_bound)) (i32.const 4))
+        call $quickSort32
+        
+        (i32.add (local.get $right) (i32.const 4))
+        (i32.div_u (i32.sub (local.get $upper_bound) (local.get $right)) (i32.const 4))
+        call $quickSort32
+    )
     (export "abs32" (func $abs32))
     (export "abs64" (func $abs64))
     (export "memset" (func $memset))
     (export "getSum" (func $getSum))
+    (export "quickSort32" (func $quickSort32))
 )

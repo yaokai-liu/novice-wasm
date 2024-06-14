@@ -1,9 +1,8 @@
-import { NoviceTs } from "../tssrc/index.js"
 import { NoviceWasm, NoviceMemory } from "../watsrc/index.js";
 import assert from "node:assert";
 import { test, suite } from "mocha";
 
-suite("testMemset", () => {
+suite("testGetSum", () => {
     const memBuffer = NoviceMemory.buffer;
     const setArray = (_array: Array<number>) => {
         const summands = new Uint32Array(memBuffer);
