@@ -1,6 +1,5 @@
 (module
     (import "js" "mem" (memory 1))
-    (type $t_cmp_fn (func (param $_ele1 i32) (param $_ele2 i32) (result i32)))
     (func $splat64 (param $a i64) (result i64)  (local $_debug i64)
         (i64.shr_u  (i64.shl (local.get  $a) (i64.const  56)) (i64.const  56))
         (i64.or (i64.shl (local.tee $a) (i64.const 8 )) (local.get $a))
