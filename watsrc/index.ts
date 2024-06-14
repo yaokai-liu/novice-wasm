@@ -21,9 +21,7 @@ function loadWasmModule(): void {
         NoviceWasm.abs64 = instance.exports.abs64 as any as (_num:bigint)=>bigint;
         NoviceWasm.memset = instance.exports.memset as any as (_mem:number, _ch:number, _size:number) => void;
         NoviceWasm.getSum = instance.exports.getSum as any as (_nums:number, _count:number) => number;
-        NoviceWasm.quickSort = instance.exports.quickSort as any as (
-            _elements:number, _count:number, _ele_size: number, _fn_cmp: (_ele1:number, ele2:number)=>number
-        ) => void;
+        NoviceWasm.quickSort32 = instance.exports.quickSort32 as any as (_elements:number, _count:number) => void;
     });
 }
 loadWasmModule();
